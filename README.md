@@ -2,7 +2,7 @@
 Convert Your Videos into Frame By Frame Png's... Useful for Rotoscoping
 
 # Abstract
-Rotoscoping is a traditional animation technique that involves tracing over motion picture footage, frame by frame, to create realistic movement. While modern software such as Blender and other 3D modeling tools have made rotoscoping more accessible, many animators in developing countries face significant challenges due to limited computational power. This inadequacy restricts their ability to utilize advanced animation software effectively. In Leau of this, I Am to Provide A Much easier and Lightweight Way of Using Rotoscoping, without the Ineffecientcy of Using Blender Or Other Program, and Using a Pure and Easy to Modify Programming Language, Python [please refer to this article](https://en.wikipedia.org/wiki/Rotoscoping)
+Rotoscoping is a traditional animation technique that involves tracing over motion picture footage, frame by frame, to create realistic movement. While modern software such as Blender and other 3D modeling tools have made rotoscoping more accessible, many animators in developing countries face significant challenges due to limited computational power. This inadequacy restricts their ability to utilize advanced animation software effectively. In Leau of this, I Am to Provide A Much easier and Lightweight Way of Using Rotoscoping, without the Ineffeciency of Using Blender Or Other Program, and Using a Pure and Easy to Modify Programming Language, Python. [please refer to this article](https://en.wikipedia.org/wiki/Rotoscoping)
 
 ### My Software Aims to:
 - Support Any Computer(Either Low-End or High-end)

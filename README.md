@@ -46,4 +46,5 @@ Rotoscoping is a traditional animation technique that involves tracing over moti
 </picture>
 
 ### This Program is Licensed As BSD 3-Clause, Please read through the BSD 3-Clause to Know The Limit/s ###
-
+If You Liked the Software, Feel Free to Donate To Me
+[Click Me](https://www.patreon.com/ItsMeDevRoland)

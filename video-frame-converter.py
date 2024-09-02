@@ -61,7 +61,6 @@ class VideoFrameConverter:
         master.title("ItsMeDevRoland's Video Frame Converter")
         master.geometry("800x600")
         master.configure(bg="#f0f4f8")
-        master.resizable(False, False)  # Prevent maximizing
 
         self.input_file = tk.StringVar()
         self.output_folder = tk.StringVar()

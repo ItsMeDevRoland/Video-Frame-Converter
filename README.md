@@ -44,5 +44,6 @@ Rotoscoping is a traditional animation technique that involves tracing over moti
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/1c7d360e-ef57-48ae-8e64-5c82075aa380">
   <img alt="My Banner." src="https://github.com/user-attachments/assets/1c7d360e-ef57-48ae-8e64-5c82075aa380">
 </picture>
+
 ### This Program is Licensed As BSD 3-Clause, Please read through the BSD 3-Clause to Know The Limit/s ###
 

@@ -127,7 +127,7 @@ class VideoFrameConverter:
         ttk.Label(main_frame, text="Custom Name Pattern:").grid(row=7, column=0, sticky="w", padx=5, pady=5)
         pattern_entry = ttk.Entry(main_frame, textvariable=self.custom_name_pattern)
         pattern_entry.grid(row=7, column=1, sticky="ew", padx=5, pady=5)
-        pattern_entry.bind("<Enter>", lambda event: self.show_tooltip(event, "Use 'frame_{:04d}' for zero-padded frame numbers."))
+        pattern_entry.bind("<Enter>", lambda event: self.show_tooltip(event, "Use {NameOfFile}_{: + paddingNumber + d} for Serializing and Telling the Program for the naming pattern"))
         pattern_entry.bind("<Leave>", self.hide_tooltip)
 
         # Add settings button
@@ -185,7 +185,7 @@ class VideoFrameConverter:
         except:
             self.use_gpu.set(False)
             self.gpu_checkbox.config(state='disabled')
-            messagebox.showinfo("GPU Support", "CUDA is not available on this system. GPU acceleration will be disabled.")
+            messagebox.showinfo("GPU Support", "Warning: CUDA is not available on this system. GPU acceleration will be disabled Automatically, For Your Convinience.")
 
     def process_frame(self, frame, frame_count, output_folder, image_format, quality):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -350,20 +350,43 @@ class VideoFrameConverter:
 
     def apply_theme(self, style):
         theme = self.theme.get()
+    
+        # Define light theme styles
         if theme == "light":
             style.theme_use('clam')
             style.configure('TButton', background="#4a90e2", foreground="white", font=('Segoe UI', 10), padding=10)
-            style.configure('TLabel', background="#ffffff", font=('Segoe UI', 10))
-            style.configure('TEntry', font=('Segoe UI', 10))
-            style.configure('TCheckbutton', background="#ffffff", font=('Segoe UI', 10))
+            style.configure('TLabel', background="#ffffff", foreground="#000000", font=('Segoe UI', 10))
+            style.configure('TEntry', fieldbackground="#ffffff", foreground="#000000", insertbackground="#000000", font=('Segoe UI', 10))
+            style.configure('TCheckbutton', background="#ffffff", foreground="#000000", font=('Segoe UI', 10))
+        
+            # Configure main window and all widgets
             self.master.configure(bg="#f0f4f8")
+            self.update_widget_backgrounds("#f0f4f8")
+        
+        # Define dark theme styles
         elif theme == "dark":
             style.theme_use('clam')
             style.configure('TButton', background="#333333", foreground="white", font=('Segoe UI', 10), padding=10)
             style.configure('TLabel', background="#333333", foreground="white", font=('Segoe UI', 10))
-            style.configure('TEntry', fieldbackground="#333333", foreground="white", font=('Segoe UI', 10))
+            style.configure('TEntry', fieldbackground="#333333", foreground="white", insertbackground="white", font=('Segoe UI', 10))
             style.configure('TCheckbutton', background="#333333", foreground="white", font=('Segoe UI', 10))
+        
+            # Configure main window and all widgets
             self.master.configure(bg="#333333")
+            self.update_widget_backgrounds("#333333")
+
+    # Helper function to update widget backgrounds
+    def update_widget_backgrounds(self, bg_color):
+        for widget in self.master.winfo_children():
+            # Update frame or widgets that need background color changes
+            if isinstance(widget, (tk.Label, tk.Entry, tk.Checkbutton, tk.Frame, tk.LabelFrame)):
+                widget.configure(bg=bg_color)
+            # Recursively update children of frames
+            if isinstance(widget, (tk.Frame, tk.LabelFrame)):
+                for child in widget.winfo_children():
+                    child.configure(bg=bg_color)
+
+
 
     def show_help(self):
         help_window = tk.Toplevel(self.master)
@@ -372,8 +395,9 @@ class VideoFrameConverter:
 
         help_text = """
         Naming Pattern Help:
-        - Use 'frame_{:04d}' for zero-padded frame numbers.
-        - Example: frame_0001, frame_0002, etc.
+        - Use {NameOfFile}_{: + paddingNumber + d} for Serializing and Telling the Program for the naming pattern
+        - For Example, 'frame_{:05d}' which results in frames that has frame_00001, frame_00002, and above
+        - Feel free to Check the Source-Code to See how it works and if you have any good update for this naming pattern system
         """
 
         tk.Label(help_window, text=help_text, justify=tk.LEFT, font=('Segoe UI', 10)).pack(padx=20, pady=20)

@@ -1,3 +1,29 @@
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    import tkinter as tk
+    from tkinter import filedialog, messagebox, ttk
+except ImportError:
+    install("tkinter")
+    import tkinter as tk
+    from tkinter import filedialog, messagebox, ttk
+
+try:
+    import cv2
+except ImportError:
+    install("opencv-python")
+    import cv2
+
+try:
+    from PIL import Image, ImageTk
+except ImportError:
+    install("Pillow")
+    from PIL import Image, ImageTk
+
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import cv2

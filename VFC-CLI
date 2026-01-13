@@ -1,0 +1,130 @@
+from PIL import Image
+import cv2
+import os
+
+def TakeVideoFromCLI(VideoLocation):
+    ImagePosition = VideoLocation
+    name, fileformat = os.path.splitext(VideoLocation)
+
+    vfcprint(name)
+    vfcprint(fileformat)
+    vfcprint("IF YOU DIDNT RECEIVE 2 PRINT, EXPECT AN ERROR!")
+
+
+    if fileformat.lower() in ['.mp4', '.avi', '.mov']:
+        return VideoLocation
+    else:
+        CrashVFC("FILE IS NOT IN PROPER FILE FORMAT!")
+
+
+def LoadVideoForCV2(VideoLocation):
+    CapCamera = cv2.VideoCapture(VideoLocation)
+    return {"Status": True, "Cap" : CapCamera}
+
+def PILImageConversion(Frame_rgb, ImageOutputType, Quality, FrameNumber, NamingConvension):
+    # Create a PIL Image object from the RGB numpy array
+    # Converts from numpy array to PIL's internal image format
+    pil_img = Image.fromarray(Frame_rgb)
+
+    # Save the PIL Image to a file
+    NameConstructor = NamingConvension + str(FrameNumber)
+    NameWithFileType = NameConstructor + ImageOutputType
+
+    pil_img.save(NameWithFileType, quality=Quality)
+
+
+def ProcessVideo(VideoLocation, ImageOutputType, Quality, NamingConvension):
+    FrameNumber = 0
+    CapValue = LoadVideoForCV2(VideoLocation)
+    CapStatus = CapValue["Status"]
+    Cap = CapValue["Cap"]
+
+    if not CapStatus:
+        CrashVFC("PROCESS VIDEO HIT A SNAG! %s " % CapValue)
+    
+    # Get the total number of frames in the video (as an integer)
+    total_frames = int(Cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    while True:
+    # Read the next frame from the video
+    # ret = True if successful, False if video ended
+    # frame = numpy array of pixel data (BGR format)
+        ret, frame = Cap.read()
+        
+        # If reading failed (video ended)
+        if not ret:
+            if FrameNumber >= total_frames - 1:
+                CrashVFC("ret VARIABLE HIT A SNAG! %s - ret value, %s - CapValue" % (ret,CapValue))
+            break  # Exit the loop
+        
+        # Convert the frame from BGR (OpenCV's format) to RGB (PIL's format)
+        # Returns a NEW numpy array with swapped color channels
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # In ProcessVideo, inside the while loop:
+        print(f"Processing: {FrameNumber}/{total_frames} ({FrameNumber/total_frames*100:.1f}%)", end='\r')
+        FrameNumber+=1
+
+        PILImageConversion(frame_rgb,ImageOutputType,Quality,FrameNumber,NamingConvension)
+    
+    Cap.release() # save memory!
+    print("SUCCESSFULLY CONVERTED ALL FRAMES!")
+    print("%s Frame/s are generated!" % FrameNumber)
+    
+
+
+#-=========CONTACT API===========-#
+def PythonBasedCLI_Begin():
+    print("WELCOME TO VIDEO FRAME CONVERTER!")
+    print("This execution uses the python-based CLI!")
+    print("Please Begin By Filling out all the info needed by the CLI!")
+    print("Type the location of the Video You want to CONVERT")
+    VideoLocation = input().strip().strip("'").strip('"')
+    print("Location Selected: %s" % VideoLocation)
+    print("What about the Name Desired Output? ")
+    NameOfOutput = input().strip().strip("'").strip('"')
+    print("%s will be used as the Name for each output!" % NameOfOutput)
+    print("Please select the Quality Desired! the HIGHER the better")
+    Output = int(input())
+    
+    if not isinstance(Output,int):
+        CrashVFC("INVALID Quality OUTPUT!! PLEASE RESELECT AGAIN!")
+        PythonBasedCLI_Begin()
+    
+
+    print("Finally, please state the Desired Image File format(include the '.' ex: .png)!")
+    FileFormatOutput = input().strip().strip("'").strip('"')
+    Lower = FileFormatOutput.lower()
+
+    ImageFormatAllowed = [".png", ".jpg"]
+    if Lower in ImageFormatAllowed:
+        print("Perfect! Lets Begin!")
+        Begin(VideoLocation, FileFormatOutput, Output, NameOfOutput)
+    else:
+        CrashVFC("INVALID OUTPUT! PLEASE RESELECT AGAIN!")
+        PythonBasedCLI_Begin()
+
+def Begin(VideoLocation, ImageOutputType, Quality, NamingConvension):
+    Video = TakeVideoFromCLI(VideoLocation)
+
+    VideoLoaded = LoadVideoForCV2(Video)
+    
+    VideoCap = VideoLoaded["Cap"]
+    ProcessVideo(Video,ImageOutputType,Quality,NamingConvension)
+        
+
+#-==========UTILITY===============-#
+def vfcprint(Message):
+    if isinstance(Message, str):
+        print("[VFC] %s " % Message)
+    else:
+        CrashVFC("INVALID PRINT STATEMENT!")
+
+def CrashVFC(Message):
+    print("[CRITICAL - VFC] %s " % Message)
+    return
+
+
+#-==========EXECUTION===============-#
+if __name__ == "__main__":
+    PythonBasedCLI_Begin()
